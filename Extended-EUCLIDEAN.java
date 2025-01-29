@@ -1,70 +1,54 @@
 import java.util.Scanner;
 
 public class ExtendedEuclidean {
-    // Iterative method to find GCD using Euclidean algorithm
-    public static int gcdIterative(int a, int b) {
-        a = Math.abs(a);
-        b = Math.abs(b);
+
+    // Function to compute GCD and find modular inverse
+    public static void findGCDAndInverse(int a, int m) {
+        int r1 = m, r2 = a; // r1 = modulus, r2 = number whose inverse is needed
+        int t1 = 0, t2 = 1; // t1 and t2 for tracking coefficients
         
-        while (b != 0) {
-            int temp = b;
-            b = a % b;
-            a = temp;
+        System.out.println("Step-by-step computation:");
+        System.out.println("q\tr1\tr2\tr\tt1\tt2\tt");
+
+        while (r2 > 0) {
+            int q = r1 / r2;
+            int r = r1 - q * r2;
+            r1 = r2;
+            r2 = r;
+
+            int t = t1 - q * t2;
+            t1 = t2;
+            t2 = t;
+
+            System.out.println(q + "\t" + r1 + "\t" + r2 + "\t" + r + "\t" + t1 + "\t" + t2 + "\t" + t);
         }
-        return a;
-    }
-    
-    // Recursive method to find GCD using Euclidean algorithm
-    public static int gcdRecursive(int a, int b) {
-        a = Math.abs(a);
-        b = Math.abs(b);
-        
-        if (b == 0) {
-            return a;
+
+        System.out.println("\nGCD(" + a + ", " + m + ") = " + r1);
+
+        // If GCD is not 1, inverse does not exist
+        if (r1 != 1) {
+            System.out.println("Since GCD ≠ 1, modular inverse does not exist.");
+            return;
         }
-        return gcdRecursive(b, a % b);
+
+        // Ensure the inverse is positive
+        int inverse = (t1 % m + m) % m;
+        System.out.println("The modular inverse of " + a + " under modulo " + m + " is: " + inverse);
     }
-    
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        
-        try {
-            while (true) {
-                System.out.println("\n=== GCD Calculator ===");
-                System.out.println("1. Calculate GCD");
-                System.out.println("2. Exit");
-                System.out.print("Enter your choice (1-2): ");
-                
-                int choice = scanner.nextInt();
-                
-                if (choice == 2) {
-                    System.out.println("Goodbye!");
-                    break;
-                }
-                
-                if (choice != 1) {
-                    System.out.println("Invalid choice. Please try again.");
-                    continue;
-                }
-                
-                // Get input numbers
-                System.out.print("Enter first number: ");
-                int a = scanner.nextInt();
-                
-                System.out.print("Enter second number: ");
-                int b = scanner.nextInt();
-                
-                // Calculate and display results using both methods
-                System.out.println("\nResults:");
-                System.out.println("Using iterative method: GCD(" + a + ", " + b + ") = " 
-                                 + gcdIterative(a, b));
-                System.out.println("Using recursive method: GCD(" + a + ", " + b + ") = " 
-                                 + gcdRecursive(a, b));
-            }
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        } finally {
-            scanner.close();
-        }
+
+        // Input number and modulus
+        System.out.print("Enter number (a): ");
+        int a = scanner.nextInt();
+
+        System.out.print("Enter modulus (m): ");
+        int m = scanner.nextInt();
+
+        // Compute and display results
+        findGCDAndInverse(a, m);
+
+        scanner.close();
     }
 }
